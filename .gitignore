@@ -1,0 +1,18 @@
+# Ignore Node.js binary folder
+node-v20.15.0-linux-arm64/
+
+# Ignore local config and cache folders
+.cache/
+.config/
+.gemini/
+.local/
+.npm/
+
+# Ignore shell log and credential files
+.bash_history
+.wget-hsts
+.Xauthority
+.sudo_as_admin_successful
+
+# Ignore node_modules inside the subprojects
+**/node_modules/
