@@ -446,13 +446,58 @@ body.ui-liquid .glass{box-shadow:0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba
 [data-depth]{will-change:transform;}
 
 @media(max-width:880px){
-  .hero-grid{grid-template-columns:1fr;}
+  .hero-grid{grid-template-columns:1fr; gap: 30px;}
   .dp-stage{order:-1;}
   .contact-grid{grid-template-columns:1fr;}
-  nav a{display:none;}
-  #mobile-nav-toggle{display:flex;}
+  nav.glass {
+    width: calc(100% - 40px);
+    max-width: 600px;
+    justify-content: space-between;
+    padding: 8px 16px;
+  }
+  nav a, #nav-clock {display:none !important;}
+  #mobile-nav-toggle{display:flex !important;}
   #customize-panel{width:88vw;right:-88vw;}
   section{padding:80px 0;}
+}
+
+@media(min-width: 1920px) {
+  :root {
+    --glass-blur: 28px;
+  }
+  body {
+    font-size: 19px;
+  }
+  .wrap {
+    max-width: 1540px;
+  }
+  h1, .hero-title {
+    font-size: clamp(52px, 5vw, 90px) !important;
+  }
+  h2.section-title {
+    font-size: clamp(38px, 3.5vw, 60px) !important;
+  }
+  .projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)) !important;
+    gap: 36px !important;
+  }
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 28px !important;
+  }
+  .tool-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+    gap: 24px !important;
+  }
+  .skill-card {
+    padding: 30px 24px !important;
+  }
+  .project-card {
+    font-size: 15.5px !important;
+  }
+  .tool-card {
+    padding: 28px 20px !important;
+  }
 }
 
 /* Contact text colors */
@@ -546,10 +591,22 @@ body.ui-liquid .glass{box-shadow:0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba
     <span id="cc-date" style="font-size: 10px; color: var(--text-dim);">Mon, Jan 01, 2026</span>
   </div>
   <div class="nav-actions">
+    <button class="icon-btn" id="mobile-nav-toggle" style="display:none; font-size: 16px; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%;" title="Open Menu">☰</button>
     <button class="icon-btn" id="edit-toggle" title="Toggle edit mode">✎</button>
     <button class="icon-btn" id="customize-toggle" title="Customize">◐</button>
   </div>
 </nav>
+
+<!-- MOBILE MENU OVERLAY -->
+<div id="mobile-menu" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 480px; z-index: 99; background: var(--glass-tint-strong); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 20px; flex-direction: column; gap: 12px;">
+  <a href="#tools" onclick="closeMobileMenu()" style="color: var(--text); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 500; font-size: 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">Tools</a>
+  <a href="#qualifications" onclick="closeMobileMenu()" style="color: var(--text); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 500; font-size: 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">Qualifications</a>
+  <a href="#skills" onclick="closeMobileMenu()" style="color: var(--text); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 500; font-size: 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">Skills</a>
+  <a href="#projects" onclick="closeMobileMenu()" style="color: var(--text); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 500; font-size: 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">Projects</a>
+  <a href="#gallery" onclick="closeMobileMenu()" style="color: var(--text); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 500; font-size: 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">Gallery</a>
+  <a href="#contact" onclick="closeMobileMenu()" style="color: var(--text); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 500; font-size: 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">Contact</a>
+  <a href="#" id="cc-mobile-toggle" style="color: var(--primary); text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; background: rgba(63,208,255,0.06); border: 1px solid rgba(63,208,255,0.18); text-align: center; display: block;">💼 Client Centre</a>
+</div>
 
 <main>
 <!-- HERO -->
@@ -752,6 +809,16 @@ body.ui-liquid .glass{box-shadow:0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba
   </div>
 
   <div class="panel-section">
+    <label class="plabel">App launch method</label>
+    <p style="font-size: 10px; color: var(--text-dim); margin-bottom: 8px; line-height: 1.3;">Select how workspace tools and apps should open when clicked.</p>
+    <select id="tool-open-select" class="font-select" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-size: 13px; width: 100%; outline: none; font-family: var(--font-body);">
+      <option value="popup">Standalone Popup Window (Default)</option>
+      <option value="tab">New Browser Tab</option>
+      <option value="iframe">Embedded Iframe Panel</option>
+    </select>
+  </div>
+
+  <div class="panel-section">
     <label class="plabel">Theme presets</label>
     <div class="theme-swatches" id="theme-swatches"></div>
   </div>
@@ -831,6 +898,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
    STATE
    ============================================================ */
 const DEFAULT_DATA = {
+  toolOpenMethod: 'popup',
   theme:{primary:'#3fd0ff',violet:'#8b6bff',bg:'#04060c',text:'#eaf1ff',textDim:'#8a96b3',contactText:'#eaf1ff',fontDisplay:"'Orbitron',sans-serif",fontBody:"'Outfit',sans-serif",wpOpacity:50,glassBlur:22,wallpaper:'',uiStyle:'liquid'},
   brandName:'MK DIGITAL',
   brandName2:'MK DIGITAL',
@@ -877,9 +945,39 @@ const DEFAULT_DATA = {
     {name:'AI Prompt Engineering',level:88},{name:'Analytics & Reporting',level:83}
   ],
   projects:[
-    {title:'Prizmabrixx Growth Strategy',desc:'Full-funnel content and SEO strategy with an ongoing content calendar.',url:'#',img:''},
-    {title:'Vasavi Trading Co. — Digital Strategy',desc:'End-to-end digital marketing strategy for a trading business.',url:'#',img:''},
-    {title:'Rewind Life — Brand Content',desc:'Travel & lifestyle content strategy for an Instagram-first brand.',url:'#',img:''}
+    {
+      title:'Prizmabrixx Growth Strategy',
+      desc:'Full-funnel content and SEO strategy with an ongoing content calendar.',
+      url:'#',
+      img:'',
+      client:'Prizmabrixx Solutions',
+      services:'SEO Audit, Semantic Content Hubs, Editorial Calendar',
+      challenge:'Prizmabrixx lacked organic search visibility, resulting in zero inbound leads and high dependency on paid search channels.',
+      approach:'Conducted a comprehensive SEO audit, restructured their information architecture into a hub-and-spoke model, mapped 150+ high-intent keywords, and executed an ongoing content strategy.',
+      results:'Achieved a 210% increase in organic search traffic within 90 days, with 18 keywords reaching the top 3 spots, generating a consistent volume of organic inbound leads.'
+    },
+    {
+      title:'Vasavi Trading Co. — Digital Strategy',
+      desc:'End-to-end digital marketing strategy for a trading business.',
+      url:'#',
+      img:'',
+      client:'Vasavi Trading Co.',
+      services:'Local SEO, Google PPC, B2B Lead Gen, Landing Page Design',
+      challenge:'A legacy B2B trading business relying purely on offline relations wanting to establish a digital footprint and drive online inquiries.',
+      approach:'Designed a high-converting catalog website, set up local SEO (Google Business Profile optimization), and launched targeted Google Search Ads focusing on bulk trading keywords.',
+      results:'Generated 85+ high-ticket B2B leads within the first 60 days. Local map views increased by 340%, establishing them as the go-to regional supplier.'
+    },
+    {
+      title:'Rewind Life — Brand Content',
+      desc:'Travel & lifestyle content strategy for an Instagram-first brand.',
+      url:'#',
+      img:'',
+      client:'Rewind Life Lifestyle Co.',
+      services:'Creative Direction, Social Reels Production, Influencer Seeding, Branding',
+      challenge:'A lifestyle startup struggling to gain traction and user engagement on social media platforms, specifically Instagram.',
+      approach:'Crafted a story-driven social media strategy. Shot premium reels, launched a micro-influencer seeding campaign, and optimized their grid aesthetics using a custom spatial depth palette.',
+      results:'Growth of 14k+ organic followers in 45 days. Average reel engagement rate shot up to 18.4%, generating high brand affinity and direct-message partnerships.'
+    }
   ],
   gallery:[],
   galleryImages:[],
@@ -1016,7 +1114,11 @@ function renderTools(){
     a.className='tool-card glass tilt';
     a.innerHTML = `<button class="tool-remove" data-i="${i}">✕</button><div class="tool-icon">${tool.icon}</div><div class="tool-name" contenteditable="false">${tool.name}</div>`;
     a.querySelector('.tool-remove').addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); data.tools.splice(i,1); renderTools(); queueSave(); });
-    a.addEventListener('click', (e)=>{ if(editMode) e.preventDefault(); });
+    a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      if(editMode) return;
+      openTool(tool.url, tool.name);
+    });
     grid.appendChild(a); observeReveal(a);
   });
   const add = document.createElement('div');
@@ -1029,6 +1131,42 @@ function renderTools(){
     data.tools.push({name, url, icon}); renderTools(); queueSave();
   });
   grid.appendChild(add);
+}
+
+function openTool(url, name) {
+  const method = data.toolOpenMethod || 'popup';
+  
+  if (method === 'tab') {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } else if (method === 'iframe') {
+    const modal = document.getElementById('tool-iframe-modal');
+    const iframe = document.getElementById('ti-iframe');
+    const title = document.getElementById('ti-title');
+    const openNew = document.getElementById('ti-open-new');
+    
+    title.textContent = name;
+    openNew.href = url;
+    iframe.src = url;
+    modal.style.display = 'flex';
+  } else {
+    // 'popup' (Standalone Popup Window)
+    const w = 960;
+    const h = 700;
+    const left = (screen.width - w) / 2;
+    const top = (screen.height - h) / 2;
+    window.open(
+      url, 
+      '_blank', 
+      `width=${w},height=${h},left=${left},top=${top},menubar=no,status=no,toolbar=no,location=no,scrollbars=yes,resizable=yes`
+    );
+  }
+}
+
+function closeToolIframe() {
+  const modal = document.getElementById('tool-iframe-modal');
+  const iframe = document.getElementById('ti-iframe');
+  iframe.src = 'about:blank';
+  modal.style.display = 'none';
 }
 
 function renderQualifications(){
@@ -1080,11 +1218,15 @@ function renderProjects(){
         <button class="item-remove" data-i="${i}" style="position:static;float:right;">✕</button>
         <h3 contenteditable="${editMode}" data-field="title">${p.title}</h3>
         <p contenteditable="${editMode}" data-field="desc">${p.desc}</p>
-        <a href="${p.url}" target="_blank" contenteditable="${editMode}" data-field="urlText">View case study →</a>
+        <a href="javascript:void(0)" class="view-case-study-btn" style="color:var(--primary);text-decoration:none;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-top:12px;transition:0.2s;">View case study →</a>
       </div>`;
     div.querySelector('.item-remove').addEventListener('click', ()=>{ data.projects.splice(i,1); renderProjects(); queueSave(); });
     div.querySelectorAll('[data-field]').forEach(f=>{
-      f.addEventListener('input', ()=>{ if(f.dataset.field==='urlText') return; p[f.dataset.field]=f.innerText; queueSave(); });
+      f.addEventListener('input', ()=>{ p[f.dataset.field]=f.innerText; queueSave(); });
+    });
+    div.querySelector('.view-case-study-btn').addEventListener('click', (e)=>{
+      e.preventDefault();
+      openCaseStudy(i);
     });
     const upBtn = div.querySelector('.upload-tag');
     upBtn.addEventListener('click', ()=>{
@@ -1096,9 +1238,112 @@ function renderProjects(){
   });
 }
 document.getElementById('add-project').addEventListener('click', ()=>{
-  data.projects.push({title:'New project', desc:'Describe the results and approach.', url:'#', img:''});
+  data.projects.push({title:'New project', desc:'Describe the results and approach.', url:'#', img:'', client:'', services:'', challenge:'', approach:'', results:''});
   renderProjects(); queueSave();
 });
+
+const DEFAULT_CASE_STUDIES = {
+  'Prizmabrixx Growth Strategy': {
+    client: 'Prizmabrixx Solutions',
+    services: 'SEO Audit, Semantic Content Hubs, Editorial Calendar',
+    challenge: 'Prizmabrixx lacked organic search visibility, resulting in zero inbound leads and high dependency on paid search channels.',
+    approach: 'Conducted a comprehensive SEO audit, restructured their information architecture into a hub-and-spoke model, mapped 150+ high-intent keywords, and executed an ongoing content strategy.',
+    results: 'Achieved a 210% increase in organic search traffic within 90 days, with 18 keywords reaching the top 3 spots, generating a consistent volume of organic inbound leads.'
+  },
+  'Vasavi Trading Co. — Digital Strategy': {
+    client: 'Vasavi Trading Co.',
+    services: 'Local SEO, Google PPC, B2B Lead Gen, Landing Page Design',
+    challenge: 'A legacy B2B trading business relying purely on offline relations wanting to establish a digital footprint and drive online inquiries.',
+    approach: 'Designed a high-converting catalog website, set up local SEO (Google Business Profile optimization), and launched targeted Google Search Ads focusing on bulk trading keywords.',
+    results: 'Generated 85+ high-ticket B2B leads within the first 60 days. Local map views increased by 340%, establishing them as the go-to regional supplier.'
+  },
+  'Rewind Life — Brand Content': {
+    client: 'Rewind Life Lifestyle Co.',
+    services: 'Creative Direction, Social Reels Production, Influencer Seeding, Branding',
+    challenge: 'A lifestyle startup struggling to gain traction and user engagement on social media platforms, specifically Instagram.',
+    approach: 'Crafted a story-driven social media strategy. Shot premium reels, launched a micro-influencer seeding campaign, and optimized their grid aesthetics using a custom spatial depth palette.',
+    results: 'Growth of 14k+ organic followers in 45 days. Average reel engagement rate shot up to 18.4%, generating high brand affinity and direct-message partnerships.'
+  }
+};
+
+function openCaseStudy(index) {
+  const p = data.projects[index];
+  if (!p) return;
+  
+  const modal = document.getElementById('case-study-modal');
+  modal.style.display = 'flex';
+  
+  const defaultStudy = DEFAULT_CASE_STUDIES[p.title] || {};
+  
+  if (editMode) {
+    document.getElementById('cs-viewer').style.display = 'none';
+    document.getElementById('cs-editor').style.display = 'flex';
+    document.getElementById('cs-title').textContent = 'Edit Case Study';
+    
+    document.getElementById('cs-edit-index').value = index;
+    document.getElementById('cs-edit-title').value = p.title || '';
+    document.getElementById('cs-edit-client').value = p.client || defaultStudy.client || '';
+    document.getElementById('cs-edit-services').value = p.services || defaultStudy.services || '';
+    document.getElementById('cs-edit-challenge').value = p.challenge || defaultStudy.challenge || '';
+    document.getElementById('cs-edit-approach').value = p.approach || defaultStudy.approach || '';
+    document.getElementById('cs-edit-results').value = p.results || defaultStudy.results || '';
+    document.getElementById('cs-edit-url').value = (p.url === '#' ? '' : p.url) || '';
+  } else {
+    document.getElementById('cs-viewer').style.display = 'flex';
+    document.getElementById('cs-editor').style.display = 'none';
+    document.getElementById('cs-title').textContent = p.title || 'Case Study';
+    
+    const imgEl = document.getElementById('cs-view-img');
+    if (p.img) {
+      imgEl.style.backgroundImage = `url(${p.img})`;
+      imgEl.style.display = 'block';
+    } else {
+      imgEl.style.display = 'none';
+    }
+    
+    document.getElementById('cs-view-client').textContent = p.client || defaultStudy.client || p.title || 'N/A';
+    document.getElementById('cs-view-services').textContent = p.services || defaultStudy.services || 'Digital Marketing Strategy';
+    document.getElementById('cs-view-challenge').textContent = p.challenge || defaultStudy.challenge || 'Details coming soon.';
+    document.getElementById('cs-view-approach').textContent = p.approach || defaultStudy.approach || 'Details coming soon.';
+    document.getElementById('cs-view-results').textContent = p.results || defaultStudy.results || 'Details coming soon.';
+    
+    const linkWrap = document.getElementById('cs-view-link-wrap');
+    const linkEl = document.getElementById('cs-view-link');
+    if (p.url && p.url !== '#') {
+      linkEl.href = p.url;
+      linkWrap.style.display = 'block';
+    } else {
+      linkWrap.style.display = 'none';
+    }
+  }
+}
+
+function closeCaseStudy() {
+  document.getElementById('case-study-modal').style.display = 'none';
+}
+
+function saveCaseStudy(e) {
+  e.preventDefault();
+  const index = parseInt(document.getElementById('cs-edit-index').value);
+  const p = data.projects[index];
+  if (!p) return;
+  
+  p.title = document.getElementById('cs-edit-title').value.trim();
+  p.client = document.getElementById('cs-edit-client').value.trim();
+  p.services = document.getElementById('cs-edit-services').value.trim();
+  p.challenge = document.getElementById('cs-edit-challenge').value.trim();
+  p.approach = document.getElementById('cs-edit-approach').value.trim();
+  p.results = document.getElementById('cs-edit-results').value.trim();
+  
+  const urlVal = document.getElementById('cs-edit-url').value.trim();
+  p.url = urlVal || '#';
+  
+  renderProjects();
+  queueSave();
+  closeCaseStudy();
+  toast('Case study updated successfully!');
+}
+
 
 let activeGalleryTab = 'images';
 
@@ -1269,6 +1514,11 @@ function renderAll(){
   renderCustomizeSocials();
   bindEditableSaves();
   document.body.classList.toggle('edit-mode', editMode);
+  
+  const toolOpenSelect = document.getElementById('tool-open-select');
+  if (toolOpenSelect) {
+    toolOpenSelect.value = data.toolOpenMethod || 'popup';
+  }
 }
 
 /* ============================================================
@@ -1398,6 +1648,11 @@ document.getElementById('site-name-input').addEventListener('input', e=>{
   data.brandName = e.target.value; data.brandName2 = e.target.value;
   document.querySelectorAll('[data-key="brandName"],[data-key="brandName2"]').forEach(el=> el.innerHTML = e.target.value);
   document.title = (e.target.value || 'Portfolio') + ' — Digital Marketing Portfolio';
+  queueSave();
+});
+
+document.getElementById('tool-open-select').addEventListener('change', e=>{
+  data.toolOpenMethod = e.target.value;
   queueSave();
 });
 
@@ -1803,6 +2058,38 @@ document.addEventListener('mousemove', (e)=>{
     .cc-shake {
       animation: cc-shake 0.4s ease-in-out;
     }
+    @media (max-width: 768px) {
+      .cc-container {
+        height: 95vh;
+        max-height: 95vh;
+      }
+      .cc-body {
+        flex-direction: column;
+      }
+      .cc-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 180px;
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+      }
+      .cc-content {
+        padding: 16px;
+      }
+    }
+    @media (max-width: 600px) {
+      #cc-tab-inbox > div {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: 200px 1fr;
+        gap: 12px !important;
+      }
+      #cc-tab-records > div {
+        grid-template-columns: 1fr !important;
+      }
+      .cc-details-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
   </style>
 
   <!-- Lock screen card -->
@@ -1962,6 +2249,253 @@ document.addEventListener('mousemove', (e)=>{
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- CASE STUDY VIEW/EDIT MODAL -->
+<div id="case-study-modal" style="display: none; position: fixed; inset: 0; z-index: 100; background: rgba(3, 5, 10, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); align-items: center; justify-content: center; padding: 20px;">
+  <style>
+    .cs-container {
+      width: 100%;
+      max-width: 780px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .cs-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+    }
+    .cs-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: rgba(0,0,0,0.1);
+    }
+    .cs-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .cs-meta-item {
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .cs-meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .cs-meta-value {
+      font-size: 14px;
+      color: var(--text);
+    }
+    .cs-section {
+      padding: 20px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--glass-border);
+    }
+    .cs-section-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cs-section-content {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+    .cs-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .cs-input-group label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+    }
+    .cs-input-group input, .cs-input-group textarea {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 13px;
+    }
+    .cs-input-group input:focus, .cs-input-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    @media (max-width: 600px) {
+      .cs-meta-grid {
+        grid-template-columns: 1fr;
+      }
+      .cs-container {
+        max-height: 95vh;
+      }
+    }
+  </style>
+  <div class="cs-container glass">
+    <div class="cs-header">
+      <h2 id="cs-title" style="font-family: var(--font-display); font-size: 18px; color: var(--text);">Case Study Details</h2>
+      <button onclick="closeCaseStudy()" class="icon-btn" style="width: 30px; height: 30px; border-radius: 50%;">✕</button>
+    </div>
+    
+    <!-- VIEWER MODE -->
+    <div id="cs-viewer" class="cs-body">
+      <div id="cs-view-img" style="width: 100%; height: 240px; border-radius: 12px; background-size: cover; background-position: center; border: 1px solid var(--glass-border); display: none;"></div>
+      
+      <div class="cs-meta-grid">
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Client / Brand Name</div>
+          <div id="cs-view-client" class="cs-meta-value">-</div>
+        </div>
+        <div class="cs-meta-item">
+          <div class="cs-meta-label">Services Provided</div>
+          <div id="cs-view-services" class="cs-meta-value">-</div>
+        </div>
+      </div>
+      
+      <div class="cs-section">
+        <div class="cs-section-title"><span>⚠️</span> Challenge / Objective</div>
+        <div id="cs-view-challenge" class="cs-section-content">-</div>
+      </div>
+      
+      <div class="cs-section">
+        <div class="cs-section-title"><span>⚙️</span> Approach & Execution</div>
+        <div id="cs-view-approach" class="cs-section-content">-</div>
+      </div>
+      
+      <div class="cs-section">
+        <div class="cs-section-title"><span>🚀</span> Results & Outcomes</div>
+        <div id="cs-view-results" class="cs-section-content" style="color: var(--primary); font-weight: 500;">-</div>
+      </div>
+      
+      <div id="cs-view-link-wrap" style="text-align: center; margin-top: 10px; display: none;">
+        <a id="cs-view-link" href="#" target="_blank" class="btn btn-primary" style="padding: 10px 24px; border-radius:100px;">Visit Client / Live Site ↗</a>
+      </div>
+    </div>
+    
+    <!-- EDITOR MODE -->
+    <form id="cs-editor" class="cs-body" style="display: none;" onsubmit="saveCaseStudy(event)">
+      <input type="hidden" id="cs-edit-index">
+      
+      <div class="cs-input-group">
+        <label>Project Title</label>
+        <input type="text" id="cs-edit-title" required>
+      </div>
+      
+      <div class="cs-meta-grid">
+        <div class="cs-input-group">
+          <label>Client Name</label>
+          <input type="text" id="cs-edit-client">
+        </div>
+        <div class="cs-input-group">
+          <label>Services Provided</label>
+          <input type="text" id="cs-edit-services" placeholder="e.g. SEO, Social Media, Ads">
+        </div>
+      </div>
+      
+      <div class="cs-input-group">
+        <label>Challenge</label>
+        <textarea id="cs-edit-challenge" rows="3"></textarea>
+      </div>
+      
+      <div class="cs-input-group">
+        <label>Approach & Execution</label>
+        <textarea id="cs-edit-approach" rows="4"></textarea>
+      </div>
+      
+      <div class="cs-input-group">
+        <label>Results & Outcomes</label>
+        <textarea id="cs-edit-results" rows="3"></textarea>
+      </div>
+      
+      <div class="cs-input-group">
+        <label>External / Case Study URL</label>
+        <input type="text" id="cs-edit-url" placeholder="e.g. https://example.com/case-study">
+      </div>
+      
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+        <button type="button" class="btn btn-ghost" onclick="closeCaseStudy()" style="border-radius:100px;">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="border-radius:100px;">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TOOL IFRAME MODAL -->
+<div id="tool-iframe-modal" style="display: none; position: fixed; inset: 0; z-index: 100; background: rgba(3, 5, 10, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); align-items: center; justify-content: center; padding: 20px;">
+  <style>
+    .ti-container {
+      width: 100%;
+      max-width: 1100px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .ti-header {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+    }
+    .ti-body {
+      flex: 1;
+      background: #000;
+      position: relative;
+    }
+    .ti-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+    }
+  </style>
+  <div class="ti-container glass">
+    <div class="ti-header">
+      <h2 id="ti-title" style="font-family: var(--font-display); font-size: 16px; color: var(--text);">App</h2>
+      <div style="display: flex; gap: 8px;">
+        <a id="ti-open-new" href="#" target="_blank" class="btn btn-ghost" style="padding: 6px 14px; font-size: 11px; border-radius: 100px;">Open New Tab ↗</a>
+        <button onclick="closeToolIframe()" class="icon-btn" style="width: 30px; height: 30px; border-radius: 50%;">✕</button>
+      </div>
+    </div>
+    <div class="ti-body">
+      <iframe id="ti-iframe" src="about:blank"></iframe>
     </div>
   </div>
 </div>
@@ -2261,7 +2795,7 @@ function ccRenderClientDetails() {
       <button class="btn" onclick="ccDeleteClient('${client.id}')" style="border-color: rgba(255,80,80,0.3); color: #ff5b5b; font-size: 11px; padding: 6px 12px; background: transparent; border-radius: 100px;">Delete Client</button>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" class="cc-details-grid">
       <div class="glass" style="padding: 20px; border-radius: 14px; display: flex; flex-direction: column; gap: 12px; border-color: var(--glass-border);">
         <h4 style="font-size: 12px; font-family: var(--font-display); color: var(--primary);">Financial & Budget Details</h4>
         <div style="display: flex; justify-content: space-between; font-size: 11.5px;">
@@ -2511,6 +3045,37 @@ document.getElementById('cc-nav-toggle').addEventListener('click', (e) => {
   e.preventDefault();
   ccOpenModal();
 });
+
+const mobileToggle = document.getElementById('mobile-nav-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+
+if (mobileToggle) {
+  mobileToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (mobileMenu.style.display === 'flex') {
+      closeMobileMenu();
+    } else {
+      mobileMenu.style.display = 'flex';
+      mobileToggle.textContent = '✕';
+    }
+  });
+}
+
+function closeMobileMenu() {
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileToggle = document.getElementById('mobile-nav-toggle');
+  if (mobileMenu) mobileMenu.style.display = 'none';
+  if (mobileToggle) mobileToggle.textContent = '☰';
+}
+
+const ccMobileToggle = document.getElementById('cc-mobile-toggle');
+if (ccMobileToggle) {
+  ccMobileToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeMobileMenu();
+    ccOpenModal();
+  });
+}
 
 /* ============================================================
    CUSTOMIZER SOCIAL MEDIA LINKS
@@ -2935,6 +3500,18 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+document.getElementById('case-study-modal').addEventListener('click', (e)=>{
+  if(e.target === document.getElementById('case-study-modal')) {
+    closeCaseStudy();
+  }
+});
+
+document.getElementById('tool-iframe-modal').addEventListener('click', (e)=>{
+  if(e.target === document.getElementById('tool-iframe-modal')) {
+    closeToolIframe();
+  }
+});
 
 /* init */
 loadData().then(()=> playSplash());
